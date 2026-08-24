@@ -1,0 +1,65 @@
+import datetime
+import json
+
+## place to hold the data
+todo_list = []
+
+# create a structure to store description , is_complete , date_created
+
+class Todo_Item:
+    description = ""
+    is_complete = False
+    date_created = ""
+
+def load_data ():
+    with open("json_string.json", "r") as file:
+        json_string = json.load(file)
+        temp_dict = json.loads(json_string)
+        for item in temp_dict:
+            todo_item = Todo_Item()
+            todo_item.description = item['description']
+            todo_item.is_complete = item['is_complete']
+            todo_item.date_created = item['date_created']
+            globals()['todo_list'].append(todo_item)
+
+def save_data():
+    json_string = json.dumps([todo.__dict__ for todo in todo_list], indent=4)
+    print(json_string)
+
+    with open("json_string.json", "w") as file:
+        json.dump(json_string, file, indent=4)
+    print("Saved to JSON!")
+
+def main ():
+    load_data()
+    # print todo_list
+    print(todo_list)
+    print("Welcome to Todo App")
+## loop throgh a command pomprt to accept input and add the todo item
+    command = "something"
+    while(command != "no"):
+        myTodo = Todo_Item()
+        # accept input
+        todo_item = input("Enter your todo item:")
+        myTodo.description = todo_item
+        myTodo.is_complete = False
+        myTodo.date_created = datetime.datetime.now().isoformat()
+        # store it into todo_list
+        todo_list.append(myTodo)
+        # print todo_list
+        print_todo_list(todo_list)
+        command = input("Do you want to continue?")
+    # save data and exit the program
+    save_data()
+
+
+def print_todo_list(list):
+
+    print(len(list), " items found in the list..\n")
+
+    for item in list:
+        print("-> ", item.description, " Completed: ", item.is_complete , " Created: ", item.date_created)
+
+
+main()
+print("Bye")
