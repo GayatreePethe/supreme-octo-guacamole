@@ -30,25 +30,64 @@ def save_data():
         json.dump(json_string, file, indent=4)
     print("Saved to JSON!")
 
+def print_menu():
+    print('''menu:- print all the commands
+print:- print the list
+add:- add an item
+quit:- quit this program
+delete:- delete an item''')
+
+def add_item():
+    myTodo = Todo_Item()
+    # accept input
+    todo_item = input("Enter your todo item:")
+    myTodo.description = todo_item
+    myTodo.is_complete = False
+    myTodo.date_created = datetime.datetime.now().isoformat()
+    # store it into todo_list
+    todo_list.append(myTodo)
+    # print todo_list
+    print_todo_list(todo_list)
+
+def delete_item():
+    for i, todo in enumerate(todo_list, start=1):
+        print(f"{i}. {todo.description}")
+
+    # Getting user input
+    user_input = int(input("Enter the number of the task to delete: "))
+
+    # Adjusting for 0-based indexing
+    index_to_delete = user_input - 1
+
+    # Deleting the item safely
+    if 0 <= index_to_delete < len(todo_list):
+        removed_task = todo_list.pop(index_to_delete)
+        print(f"Successfully deleted: '{removed_task}'")
+    else:
+        print("Invalid task number!") 
+
 def main ():
     load_data()
     # print todo_list
-    print(todo_list)
+    #print(todo_list)
     print("Welcome to Todo App")
-## loop throgh a command pomprt to accept input and add the todo item
+    print_menu()
+# loop throgh a command prompt to accept input and add the todo item
+
     command = "something"
-    while(command != "no"):
-        myTodo = Todo_Item()
-        # accept input
-        todo_item = input("Enter your todo item:")
-        myTodo.description = todo_item
-        myTodo.is_complete = False
-        myTodo.date_created = datetime.datetime.now().isoformat()
-        # store it into todo_list
-        todo_list.append(myTodo)
-        # print todo_list
-        print_todo_list(todo_list)
-        command = input("Do you want to continue?")
+    while command != "no":
+        command = input("Enter your command:")
+        if command == "menu":
+            print_menu()
+        elif command == "add":
+            add_item()
+        elif command == "print":
+            print_todo_list(todo_list)
+        elif command == "delete":
+            delete_item() 
+        elif command == "quit":
+            break
+
     # save data and exit the program
     save_data()
 
